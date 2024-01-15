@@ -16,5 +16,8 @@ migratedown:
 sqlc:
 	sqlc generate
 
+test:
+	go test -v -cover ./...
+
 ## a label for a set of commands that should be executed when the make createdb command is run
 .PHONY: postgres createdb dropdb migrateup migratedown
