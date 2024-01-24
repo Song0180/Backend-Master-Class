@@ -8,22 +8,23 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
-)
-
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/simple-bank?sslmode=disable"
+	"github.com/song0180/simple-bank/util"
 )
 
 var testQueries *Queries
 var testConnPool *pgxpool.Pool
 
 func TestMain(m *testing.M) {
-	var err error
-	testConnPool, err = pgxpool.New(context.Background(), dbSource)
+	config, err := util.LoadConfig("../..")
 
 	if err != nil {
-		log.Fatal("Unable to connect to the DB", err)
+		log.Fatal("Unable to read config for test", err)
+	}
+
+	testConnPool, err = pgxpool.New(context.Background(), config.DBSource)
+
+	if err != nil {
+		log.Fatal("Unable to connect to the DB:", err)
 	}
 
 	testQueries = New(testConnPool)

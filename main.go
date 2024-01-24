@@ -8,26 +8,25 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/song0180/simple-bank/api"
 	db "github.com/song0180/simple-bank/db/sqlc"
-)
-
-const (
-	dbDriver      = "postgres"
-	dbSource      = "postgresql://root:secret@localhost:5432/simple-bank?sslmode=disable"
-	serverAddress = "127.0.0.1:8080"
+	"github.com/song0180/simple-bank/util"
 )
 
 func main() {
-	var err error
-	testConnPool, err := pgxpool.New(context.Background(), dbSource)
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Unable to read configs:", err)
+	}
+
+	testConnPool, err := pgxpool.New(context.Background(), config.DBSource)
 
 	if err != nil {
-		log.Fatal("Unable to connect to the DB", err)
+		log.Fatal("Unable to connect to the DB:", err)
 	}
 
 	store := db.NewStore(testConnPool)
 	server := api.NewServer(store)
 
-	err = server.Start(serverAddress)
+	err = server.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("Unable to start the server:", err)
 	}
