@@ -22,5 +22,8 @@ test:
 server:
 	go run main.go
 
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/song0180/simple-bank/db/sqlc Store
+
 ## a label for a set of commands that should be executed when the make createdb command is run
-.PHONY: postgres createdb dropdb migrateup migratedown server
+.PHONY: postgres createdb dropdb migrateup migratedown server mock
