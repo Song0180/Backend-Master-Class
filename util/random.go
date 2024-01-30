@@ -32,7 +32,7 @@ func RandomBalance() int64 {
 
 func RandomCurrency() string {
 	currencies := []string{
-		"USD", "CNY",
+		USD, CNY,
 	}
 
 	n := len(currencies)
